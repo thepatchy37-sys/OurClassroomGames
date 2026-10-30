@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neon Snake Classic</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: #090d16;
+      color: #e2e8f0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    .hud {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 480px;
+      max-width: 95vw;
+      padding: 12px 16px;
+      background: #111827;
+      border: 1px solid #1f2937;
+      border-radius: 8px 8px 0 0;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .score-badge { color: #10b981; }
+    .high-badge { color: #f59e0b; }
+    #canvas-wrap {
+      position: relative;
+      width: 480px;
+      max-width: 95vw;
+      height: 480px;
+      max-height: 70vh;
+      background: #030712;
+      border: 1px solid #1f2937;
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(3, 7, 18, 0.85);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      backdrop-filter: blur(4px);
+    }
+    .overlay.hidden { display: none; }
+    .btn {
+      padding: 10px 24px;
+      background: #10b981;
+      color: #030712;
+      border: none;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .btn:hover { background: #34d399; transform: scale(1.02); }
+    .controls-hint {
+      margin-top: 12px;
+      font-size: 12px;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+  <div class="hud">
+    <div>SCORE: <span id="score" class="score-badge">0</span></div>
+    <div>BEST: <span id="high" class="high-badge">0</span></div>
+    <div id="speed-label" style="color: #60a5fa;">SPEED: 1x</div>
+  </div>
+
+  <div id="canvas-wrap">
+    <canvas id="game" width="480" height="480"></canvas>
+
+    <div id="start-overlay" class="overlay">
+      <h2 style="font-size: 26px; font-weight: 800; letter-spacing: -0.5px;">NEON SNAKE</h2>
+      <p style="color: #94a3b8; font-size: 13px;">Use Arrow keys or WASD to slither</p>
+      <button class="btn" id="start-btn">PLAY GAME</button>
+    </div>
+
+    <div id="gameover-overlay" class="overlay hidden">
+      <h2 style="font-size: 24px; font-weight: 800; color: #ef4444;">GAME OVER</h2>
+      <p id="final-stats" style="color: #cbd5e1; font-size: 14px;">Score: 0</p>
+      <button class="btn" id="restart-btn">PLAY AGAIN</button>
+    </div>
+  </div>
+
+  <div class="controls-hint">Arrow Keys / WASD · Space to Pause</div>
+
+  <script>
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+    const scoreEl = document.getElementById('score');
+    const highEl = document.getElementById('high');
+    const speedEl = document.getElementById('speed-label');
+    const startOverlay = document.getElementById('start-overlay');
+    const gameoverOverlay = document.getElementById('gameover-overlay');
+    const startBtn = document.getElementById('start-btn');
+    const restartBtn = document.getElementById('restart-btn');
+    const finalStats = document.getElementById('final-stats');
+
+    // Web Audio Sound FX
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playTone(freq, type = 'sine', duration = 0.08) {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    const GRID = 20;
+    const COLS = 24;
+    const ROWS = 24;
+
+    let snake = [];
+    let dir = { x: 1, y: 0 };
+    let nextDir = { x: 1, y: 0 };
+    let food = { x: 15, y: 12, super: false };
+    let score = 0;
+    let high = parseInt(localStorage.getItem('snake_highscore') || '0', 10);
+    highEl.textContent = high;
+    let speed = 110;
+    let gameLoop = null;
+    let isPaused = false;
+    let isRunning = false;
+
+    function resetGame() {
+      snake = [
+        { x: 10, y: 12 },
+        { x: 9, y: 12 },
+        { x: 8, y: 12 }
+      ];
+      dir = { x: 1, y: 0 };
+      nextDir = { x: 1, y: 0 };
+      score = 0;
+      speed = 110;
+      scoreEl.textContent = score;
+      speedEl.textContent = 'SPEED: 1.0x';
+      spawnFood();
+      isRunning = true;
+      isPaused = false;
+      startOverlay.classList.add('hidden');
+      gameoverOverlay.classList.add('hidden');
+
+      if (gameLoop) clearInterval(gameLoop);
+      gameLoop = setInterval(tick, speed);
+      draw();
+    }
+
+    function spawnFood() {
+      let valid = false;
+      while (!valid) {
+        food.x = Math.floor(Math.random() * COLS);
+        food.y = Math.floor(Math.random() * ROWS);
+        valid = !snake.some(segment => segment.x === food.x && segment.y === food.y);
+      }
+      food.super = Math.random() < 0.2; // 20% super food
+    }
+
+    function tick() {
+      if (isPaused || !isRunning) return;
+
+      dir = nextDir;
+      const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+
+      // Wall collision
+      if (head.x < 0 || head.x >= COLS || head.y < 0 || head.y >= ROWS) {
+        gameOver();
+        return;
+      }
+
+      // Self collision
+      if (snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+        gameOver();
+        return;
+      }
+
+      snake.unshift(head);
+
+      // Check food
+      if (head.x === food.x && head.y === food.y) {
+        const pts = food.super ? 50 : 10;
+        score += pts;
+        scoreEl.textContent = score;
+        if (score > high) {
+          high = score;
+          highEl.textContent = high;
+          localStorage.setItem('snake_highscore', high);
+        }
+
+        playTone(food.super ? 880 : 540, 'triangle', 0.1);
+
+        // Speed ramp
+        if (speed > 55 && score % 40 === 0) {
+          speed -= 5;
+          clearInterval(gameLoop);
+          gameLoop = setInterval(tick, speed);
+          speedEl.textContent = `SPEED: ${(110 / speed).toFixed(1)}x`;
+        }
+        spawnFood();
+      } else {
+        snake.pop();
+      }
+
+      draw();
+    }
+
+    function gameOver() {
+      isRunning = false;
+      clearInterval(gameLoop);
+      playTone(160, 'sawtooth', 0.35);
+      finalStats.textContent = `Final Score: ${score} · High Score: ${high}`;
+      gameoverOverlay.classList.remove('hidden');
+    }
+
+    function draw() {
+      // Clear background
+      ctx.fillStyle = '#030712';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Subtle grid dots
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
+      for (let x = 0; x < canvas.width; x += GRID) {
+        for (let y = 0; y < canvas.height; y += GRID) {
+          ctx.fillRect(x + 9, y + 9, 2, 2);
+        }
+      }
+
+      // Draw Food
+      if (food.super) {
+        ctx.fillStyle = '#fbbf24';
+        ctx.shadowColor = '#f59e0b';
+        ctx.shadowBlur = 10;
+      } else {
+        ctx.fillStyle = '#ef4444';
+        ctx.shadowColor = '#dc2626';
+        ctx.shadowBlur = 8;
+      }
+      ctx.beginPath();
+      ctx.arc(food.x * GRID + GRID/2, food.y * GRID + GRID/2, GRID/2 - 2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // Draw Snake
+      snake.forEach((part, index) => {
+        if (index === 0) {
+          ctx.fillStyle = '#34d399';
+          ctx.shadowColor = '#10b981';
+          ctx.shadowBlur = 8;
+        } else {
+          ctx.fillStyle = '#059669';
+          ctx.shadowBlur = 0;
+        }
+        ctx.fillRect(part.x * GRID + 1, part.y * GRID + 1, GRID - 2, GRID - 2);
+      });
+      ctx.shadowBlur = 0;
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (['ArrowUp', 'KeyW'].includes(e.code) && dir.y === 0) {
+        nextDir = { x: 0, y: -1 };
+        e.preventDefault();
+      } else if (['ArrowDown', 'KeyS'].includes(e.code) && dir.y === 0) {
+        nextDir = { x: 0, y: 1 };
+        e.preventDefault();
+      } else if (['ArrowLeft', 'KeyA'].includes(e.code) && dir.x === 0) {
+        nextDir = { x: -1, y: 0 };
+        e.preventDefault();
+      } else if (['ArrowRight', 'KeyD'].includes(e.code) && dir.x === 0) {
+        nextDir = { x: 1, y: 0 };
+        e.preventDefault();
+      } else if (e.code === 'Space') {
+        if (isRunning) {
+          isPaused = !isPaused;
+        } else if (!startOverlay.classList.contains('hidden') || !gameoverOverlay.classList.contains('hidden')) {
+          resetGame();
+        }
+        e.preventDefault();
+      }
+    });
+
+    startBtn.addEventListener('click', resetGame);
+    restartBtn.addEventListener('click', resetGame);
+
+    draw();
+  </script>
+</body>
+</html>

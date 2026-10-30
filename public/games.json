@@ -1,0 +1,189 @@
+[
+  {
+    "id": "neon-snake",
+    "title": "Neon Snake Classic",
+    "category": "Arcade",
+    "description": "Slither through the neon grid, hunt energy orbs, and test your reflexes as speed increases.",
+    "iframeSrc": "/games/snake.html",
+    "iframeCode": "<iframe src=\"/games/snake.html\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen></iframe>",
+    "accentColor": "#10b981",
+    "tags": ["Arcade", "Retro", "Reflex"],
+    "controls": [
+      { "key": "Arrow Keys / WASD", "action": "Turn Direction" },
+      { "key": "Space", "action": "Pause Game" }
+    ],
+    "rating": 4.9,
+    "plays": 28400,
+    "featured": true
+  },
+  {
+    "id": "cyber-pong",
+    "title": "Cyber Pong Retro",
+    "category": "Retro",
+    "description": "Fast-paced digital table tennis against an adaptive AI cpu or local opponent. First to 7 points takes victory.",
+    "iframeSrc": "/games/pong.html",
+    "iframeCode": "<iframe src=\"/games/pong.html\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen></iframe>",
+    "accentColor": "#3b82f6",
+    "tags": ["Retro", "Sports", "2-Player"],
+    "controls": [
+      { "key": "W / S or Up / Down", "action": "Paddle Movement" },
+      { "key": "Space", "action": "Pause / Unpause" }
+    ],
+    "rating": 4.8,
+    "plays": 19200,
+    "featured": false
+  },
+  {
+    "id": "neon-breakout",
+    "title": "Neon Breakout",
+    "category": "Arcade",
+    "description": "Demolish arrays of glowing neon bricks, deflect high-velocity energy balls, and climb stages.",
+    "iframeSrc": "/games/breakout.html",
+    "iframeCode": "<iframe src=\"/games/breakout.html\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen></iframe>",
+    "accentColor": "#8b5cf6",
+    "tags": ["Arcade", "Action", "Classic"],
+    "controls": [
+      { "key": "Mouse / Arrow Keys", "action": "Steer Paddle" },
+      { "key": "Space", "action": "Pause" }
+    ],
+    "rating": 4.7,
+    "plays": 23100,
+    "featured": true
+  },
+  {
+    "id": "block-drop-tetris",
+    "title": "Block Drop Tetris",
+    "category": "Puzzle",
+    "description": "Rotate and drop falling tetromino shapes to clear complete lines, queue hold pieces, and score high combos.",
+    "iframeSrc": "/games/tetris.html",
+    "iframeCode": "<iframe src=\"/games/tetris.html\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen></iframe>",
+    "accentColor": "#0284c7",
+    "tags": ["Puzzle", "Strategy", "Classic"],
+    "controls": [
+      { "key": "Arrow Left / Right", "action": "Shift Piece" },
+      { "key": "Arrow Up / X", "action": "Rotate Piece" },
+      { "key": "Arrow Down", "action": "Soft Drop" },
+      { "key": "Space", "action": "Hard Drop" },
+      { "key": "C", "action": "Hold Piece" }
+    ],
+    "rating": 5.0,
+    "plays": 45800,
+    "featured": true
+  },
+  {
+    "id": "2048-classic",
+    "title": "2048 Number Merge",
+    "category": "Puzzle",
+    "description": "Join tiles with matching numbers to reach the legendary 2048 tile. Features undo moves and score tracking.",
+    "iframeSrc": "/games/2048.html",
+    "iframeCode": "<iframe src=\"/games/2048.html\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen></iframe>",
+    "accentColor": "#f59e0b",
+    "tags": ["Puzzle", "Brain", "Numbers"],
+    "controls": [
+      { "key": "Arrow Keys / WASD", "action": "Slide Tiles" },
+      { "key": "Swipe (Mobile)", "action": "Gesture Slide" }
+    ],
+    "rating": 4.9,
+    "plays": 37100,
+    "featured": true
+  },
+  {
+    "id": "flappy-pilot",
+    "title": "Flappy Pilot",
+    "category": "Action",
+    "description": "Navigate your drone pilot through treacherous obstacle pillars with razor-sharp timing and momentum control.",
+    "iframeSrc": "/games/flappy.html",
+    "iframeCode": "<iframe src=\"/games/flappy.html\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen></iframe>",
+    "accentColor": "#eab308",
+    "tags": ["Action", "Arcade", "Endless"],
+    "controls": [
+      { "key": "Space / Left Click", "action": "Thrust Flap" }
+    ],
+    "rating": 4.6,
+    "plays": 32900,
+    "featured": false
+  },
+  {
+    "id": "galaxy-invaders",
+    "title": "Galaxy Invaders",
+    "category": "Action",
+    "description": "Classic space shooter arcade. Defend Earth against descending waves of alien invaders and enemy laser fire.",
+    "iframeSrc": "/games/space-invaders.html",
+    "iframeCode": "<iframe src=\"/games/space-invaders.html\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen></iframe>",
+    "accentColor": "#06b6d4",
+    "tags": ["Action", "Shooter", "Retro"],
+    "controls": [
+      { "key": "Left / Right Arrows or A / D", "action": "Move Ship" },
+      { "key": "Space", "action": "Fire Laser Cannon" }
+    ],
+    "rating": 4.8,
+    "plays": 26400,
+    "featured": false
+  },
+  {
+    "id": "pixel-dino-runner",
+    "title": "Pixel Dino Runner",
+    "category": "Arcade",
+    "description": "Sprint across a desert landscape, leaping over sharp cacti and ducking under swooping pterodactyls.",
+    "iframeSrc": "/games/dino.html",
+    "iframeCode": "<iframe src=\"/games/dino.html\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen></iframe>",
+    "accentColor": "#10b981",
+    "tags": ["Arcade", "Runner", "Offline"],
+    "controls": [
+      { "key": "Space / Up Arrow", "action": "Jump" },
+      { "key": "Down Arrow", "action": "Duck / Crouch" }
+    ],
+    "rating": 4.9,
+    "plays": 41200,
+    "featured": false
+  },
+  {
+    "id": "neon-minesweeper",
+    "title": "Neon Minesweeper",
+    "category": "Puzzle",
+    "description": "Clear the grid without detonating hidden mines. Guaranteed safe on the first click with custom difficulties.",
+    "iframeSrc": "/games/minesweeper.html",
+    "iframeCode": "<iframe src=\"/games/minesweeper.html\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen></iframe>",
+    "accentColor": "#ef4444",
+    "tags": ["Puzzle", "Logic", "Classic"],
+    "controls": [
+      { "key": "Left Click", "action": "Reveal Tile" },
+      { "key": "Right Click", "action": "Flag Mine" }
+    ],
+    "rating": 4.7,
+    "plays": 18500,
+    "featured": false
+  },
+  {
+    "id": "pac-maze-runner",
+    "title": "Pac-Maze Runner",
+    "category": "Classic",
+    "description": "Navigate labyrinthian corridors eating pellets and dodging colorful ghosts in this authentic arcade tribute.",
+    "iframeSrc": "/games/pacman.html",
+    "iframeCode": "<iframe src=\"/games/pacman.html\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen></iframe>",
+    "accentColor": "#facc15",
+    "tags": ["Classic", "Arcade", "Maze"],
+    "controls": [
+      { "key": "Arrow Keys / WASD", "action": "Steer Pac-Muncher" }
+    ],
+    "rating": 4.9,
+    "plays": 51000,
+    "featured": true
+  },
+  {
+    "id": "cyber-tic-tac-toe",
+    "title": "Cyber Tic-Tac-Toe",
+    "category": "Classic",
+    "description": "The timeless 3x3 strategy duel featuring smart Minimax AI mode or head-to-head local 2-player pass & play.",
+    "iframeSrc": "/games/tic-tac-toe.html",
+    "iframeCode": "<iframe src=\"/games/tic-tac-toe.html\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen></iframe>",
+    "accentColor": "#38bdf8",
+    "tags": ["Classic", "Casual", "Minimax"],
+    "controls": [
+      { "key": "Mouse Click / Tap", "action": "Place Symbol (X or O)" }
+    ],
+    "rating": 4.6,
+    "plays": 14200,
+    "featured": false
+  }
+]

@@ -1,0 +1,6 @@
+{
+  "name": "Portal Arcade - Unblocked Games",
+  "description": "A clean, fast unblocked games hub featuring retro arcade, puzzle, and classic games loaded via standalone sandboxed iframes from a JSON registry.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
